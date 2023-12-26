@@ -25,3 +25,18 @@ merge_tracks() {
 
 	ffmpeg -i $inputFile -filter_complex ${tracksCmd}${trailingTracksCmd}amerge=inputs=${#tracks[@]}[aout] -map 0:v -map "[aout]" -c:v copy -c:a aac $outputFile
 }
+
+# Given a video file, use ffmpeg to compress the video to the given resolution.
+compress_video() {
+	if [ "$#" -ne 4 ]; then
+		echo "Usage: compress_video inputFilename outputFilename width height"
+		return 1
+	fi
+
+	inputFile="$1"
+	outputFile="$2"
+	width=($3)
+	height=($4)
+	
+	ffmpeg -i $inputFile -vf "scale=${width}:${height}" -c:a copy $outputFile
+}
