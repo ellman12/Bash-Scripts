@@ -40,3 +40,17 @@ compress_video() {
 	
 	ffmpeg -i $inputFile -vf "scale=${width}:${height}" -c:a copy $outputFile
 }
+
+# Given a video file, use ffmpeg to trim the start of the video.
+trim_video_start() {
+	if [ "$#" -ne 3 ]; then
+		echo "Usage: trim_video_start inputFilename outputFilename "seconds or HH:MM:SS""
+		return 1
+	fi
+	
+	inputFile="$1"
+	outputFile="$2"
+	newStartTime=($3)
+	
+	ffmpeg -i $inputFile -ss $newStartTime -c:a aac $outputFile
+}
