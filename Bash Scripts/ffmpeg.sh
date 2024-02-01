@@ -37,8 +37,10 @@ compress_video() {
 	outputFile="$2"
 	width="$3"
 	height="$4"
-	
-	ffmpeg -i $inputFile -vf "scale=${width}:${height}" -c:a copy $outputFile
+
+  	echo "Compressing $inputFile"
+	ffmpeg -i $inputFile -vf "scale=$width:$height" -c:a copy $outputFile
+ 	exiftool -TagsFromFile $inputFile -All:All $outputFile -overwrite_original -api largefilesupport=1
 }
 
 # Given a video file, use ffmpeg to trim the start of the video.
