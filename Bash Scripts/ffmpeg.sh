@@ -23,7 +23,7 @@ merge_tracks() {
 		trailingTracksCmd+="[a${tracks[i]}]"
 	done
 
-	ffmpeg -i $inputFile -filter_complex ${tracksCmd}${trailingTracksCmd}amerge=inputs=${#tracks[@]}[aout] -map 0:v -map "[aout]" -c:v copy -c:a aac $outputFile
+	ffmpeg -v error -i $inputFile -filter_complex ${tracksCmd}${trailingTracksCmd}amerge=inputs=${#tracks[@]}[aout] -map 0:v -map "[aout]" -c:v copy -c:a aac $outputFile
 	copy_metadata $inputFile $outputFile
 }
 
@@ -39,7 +39,7 @@ compress_video() {
 	width="$3"
 	height="$4"
 
-	ffmpeg -i $inputFile -vf "scale=$width:$height" -c:a copy $outputFile
+	ffmpeg -v error -i $inputFile -vf "scale=$width:$height" -c:a copy $outputFile
 	copy_metadata $inputFile $outputFile
 }
 
@@ -72,6 +72,6 @@ trim_video_start() {
 	outputFile="$2"
 	newStartTime="$3"
 	
-	ffmpeg -i $inputFile -ss $newStartTime -c:a aac $outputFile
+	ffmpeg -v error -i $inputFile -ss $newStartTime -c:a aac $outputFile
 	copy_metadata $inputFile $outputFile
 }
