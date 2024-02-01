@@ -24,6 +24,7 @@ merge_tracks() {
 	done
 
 	ffmpeg -i $inputFile -filter_complex ${tracksCmd}${trailingTracksCmd}amerge=inputs=${#tracks[@]}[aout] -map 0:v -map "[aout]" -c:v copy -c:a aac $outputFile
+	copy_metadata $inputFile $outputFile
 }
 
 # Given a video file, use ffmpeg to compress the video to the given resolution.
@@ -39,7 +40,7 @@ compress_video() {
 	height="$4"
 
 	ffmpeg -i $inputFile -vf "scale=$width:$height" -c:a copy $outputFile
- 	exiftool -TagsFromFile $inputFile -All:All $outputFile -overwrite_original -api largefilesupport=1
+	copy_metadata $inputFile $outputFile
 }
 
 # Given an array of video files, use compress_video() to compress them all to the given resolution.
@@ -72,4 +73,5 @@ trim_video_start() {
 	newStartTime="$3"
 	
 	ffmpeg -i $inputFile -ss $newStartTime -c:a aac $outputFile
+	copy_metadata $inputFile $outputFile
 }
