@@ -38,9 +38,26 @@ compress_video() {
 	width="$3"
 	height="$4"
 
-  	echo "Compressing $inputFile"
 	ffmpeg -i $inputFile -vf "scale=$width:$height" -c:a copy $outputFile
  	exiftool -TagsFromFile $inputFile -All:All $outputFile -overwrite_original -api largefilesupport=1
+}
+
+# Given an array of video files, use compress_video() to compress them all to the given resolution.
+compress_videos() {
+	if [ "$#" -lt 4 ]; then
+		echo "Usage: compress_videos width height outputDir inputFilenames"
+		return 1
+	fi
+	
+	width=$1
+    height=$2
+    outputDir=$3
+    shift 3
+
+    for file in "$@"; do
+		echo "Compressing $inputFile"
+		compress_video $file "$outputDir/$file" $width $height
+    done
 }
 
 # Given a video file, use ffmpeg to trim the start of the video.
